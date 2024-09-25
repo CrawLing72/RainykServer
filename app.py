@@ -3,6 +3,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import db
+from db import search_user_name
 
 app = Flask(__name__)
 
@@ -10,10 +11,6 @@ app = Flask(__name__)
 # JWT 비밀키 설정
 app.config['JWT_SECRET_KEY'] = 'jungsanghwa'  # 실제로는 안전한 비밀키를 사용하세요 : 뭐라고 하지?
 jwt = JWTManager(app)
-
-# 간단한 사용자 데이터베이스 -> 언젠간 CSC나 SQL로 바꿔 놓을 것 (야 이거 좀 힘들다)
-users = {}
-servers = {}
 
 
 # 회원 가입 엔드포인트
@@ -23,12 +20,13 @@ def register():
     username = data.get('username')
     password = data.get('password')
 
-    if username in users:
+    if db.search_user_name(username) is not None:
         return jsonify({"message": "User already exists"}), 400
 
     # 비밀번호 해시화
     hashed_password = generate_password_hash(password)
-    users[username] = hashed_password
+
+    db.insert_user(username, hashed_password) # ALERT : UID System 구현해 놓을 것
     return jsonify({"message": "User registered successfully"}), 201
 
 
@@ -39,10 +37,11 @@ def login():
     username = data.get('username')
     password = data.get('password')
 
-    user_password = users.get(username)
+    user_id = db.get_user_id(username)
+    user_password = db.get_user_password(user_id)
 
     # 사용자가 없거나 비밀번호가 틀린 경우
-    if not user_password or not check_password_hash(user_password, password):
+    if user_password == None or not check_password_hash(user_password, password):
         return jsonify({"message": "Invalid username or password"}), 401
 
     # 액세스 토큰 생성
