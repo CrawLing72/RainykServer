@@ -1,4 +1,5 @@
 import sqlite3
+import atexit
 
 con_user = sqlite3.connect("./user.db", check_same_thread=False)
 cur_user = con_user.cursor()
@@ -53,4 +54,11 @@ def insert_user(user_name: str, password: str) -> None:
     cur_user.execute("INSERT INTO user (name, password) VALUES (?, ?)", (user_name, password))
     con_user.commit()
 
+"""------------------------------------------------"""
+
+def exit():
+    con_user.close()
+    print("SERVER CLOSED!")
+
+atexit.register(exit)
 
