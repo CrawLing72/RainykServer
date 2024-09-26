@@ -56,6 +56,15 @@ def matchmaking():
 
     return jsonify(arranged_server = data[0], player_count = data[1]), 200
 
+@app.route('/gameover', methods=['GET'])
+@jwt_required()
+def gameover():
+    current_user = get_jwt_identity()
+    data = request.get_json()
+    target_server_id = data.get('target_server_id')
+
+    db.destroy_server(target_server_id)
+    return jsonify(answert="completed!"), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -117,6 +117,11 @@ def get_ids_from_server(server_id: int) -> str:
     else:
         return "error!"
 
+def destroy_server(server_id: int) -> None:
+    """destroy server by server id"""
+    cur_sv.execute("DELETE FROM server WHERE serverID = (?)", (server_id, ))
+    con_sv.commit()
+
 
 """------------------------------------------------ Above : SERVER DB"""
 
