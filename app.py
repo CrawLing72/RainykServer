@@ -48,7 +48,7 @@ def login():
 
 
 # matchmaking endpoint
-@app.route('/matchmaking', methods=['GET'])
+@app.route('/matchmaking', methods=['GET']) #Game 종료시 서버 드랍 만들어야됨!!!!!
 @jwt_required()
 def matchmaking():
     current_user = get_jwt_identity()
