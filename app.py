@@ -50,7 +50,7 @@ def login():
 # matchmaking endpoint
 @app.route('/matchmaking', methods=['GET']) #Game 종료시 서버 드랍 만들어야됨!!!!!
 @jwt_required()
-def matchmaking():
+def patchmaking():
     current_user = get_jwt_identity()
     data = db.connect_server(str(db.get_user_id(current_user)))
 
