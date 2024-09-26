@@ -52,7 +52,9 @@ def login():
 @jwt_required()
 def matchmaking():
     current_user = get_jwt_identity()
-    return jsonify(loggined_in_as=current_user), 200
+    data = db.connect_server(str(db.get_user_id(current_user)))
+
+    return jsonify(arranged_server = data[0], player_count = data[1]), 200
 
 
 if __name__ == '__main__':

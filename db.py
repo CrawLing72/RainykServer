@@ -81,15 +81,17 @@ def create_empty_server():
 def connect_server(player_id: str) -> str:
     """Connect to server and handle datas"""
     cur_sv.execute("SELECT * FROM server WHERE playerCOUNT < 6 AND status != 'onGame'")
-    arranging_data = cur_sv.fetchall()[0]
+    arranging_data = cur_sv.fetchall()
 
     if not arranging_data:
         create_empty_server()
         return connect_server(player_id)
+    else:
+        arranging_data = arranging_data[0]
 
-    arranged_server_id = arranging_data.serverID
-    arranged_server_player_id = arranging_data.playerDATA
-    arranged_server_player_count = arranging_data.playerCOUNT
+    arranged_server_id = arranging_data[0]
+    arranged_server_player_id = arranging_data[1]
+    arranged_server_player_count = arranging_data[2]
 
     modified_server_player_id = arranged_server_player_id + player_id + "~"
 
@@ -97,15 +99,15 @@ def connect_server(player_id: str) -> str:
         cur_sv.execute("UPDATE server SET playerID = (?) WHERE serverID = (?)", (modified_server_player_id, arranged_server_id))
         cur_sv.execute("UPDATE server SET status = (?) WHERE serverID = (?)", ("onGame", arranged_server_id))
         con_sv.commit()
-        return "onGame"
     else:
         cur_sv.execute("UPDATE server SET playerID = (?) WHERE serverID = (?)", (arranged_server_id, modified_server_player_id))
         cur_sv.execute("UPDATE server SET playerCOUNT = (?) WHERE serverID = (?)", (++arranged_server_player_count, arranged_server_id))
         con_sv.commit()
-        return "waiting"
+
+    return arranged_server_id,arranged_server_player_count
 
 
-def get_user_id(server_id: int) -> str:
+def get_ids_from_server(server_id: int) -> str:
     """Get user ids by server id"""
     cur_sv.execute("SELECT playerID FROM server WHERE serverID = (?)", (server_id, ))
     server_data = cur_sv.fetchone()
