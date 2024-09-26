@@ -3,7 +3,6 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import db
-from db import search_user_name
 
 app = Flask(__name__)
 
@@ -11,7 +10,6 @@ app = Flask(__name__)
 # JWT 비밀키 설정
 app.config['JWT_SECRET_KEY'] = 'jungsanghwa'  # 실제로는 안전한 비밀키를 사용하세요 : 뭐라고 하지?
 jwt = JWTManager(app)
-
 
 # 회원 가입 엔드포인트
 @app.route('/register', methods=['POST'])
