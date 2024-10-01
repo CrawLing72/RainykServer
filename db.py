@@ -78,7 +78,7 @@ def create_empty_server():
     con_sv.commit()
 
 
-def connect_server(player_id: str) -> str:
+def connect_server(player_id: str):
     """Connect to server and handle datas"""
     cur_sv.execute("SELECT * FROM server WHERE playerCOUNT < 6 AND status != 'onGame'")
     arranging_data = cur_sv.fetchall()
@@ -116,6 +116,24 @@ def get_ids_from_server(server_id: int) -> str:
         return server_data[0]
     else:
         return "error!"
+
+
+def remove_user_from_server(server_id:int, user_id:str):
+    """주어진 서버 ID에서 유저 ID를 숙청합니다"""
+    ids = get_ids_from_server(server_id)
+    if ids != "error!":
+        ids = ids.split("~")
+    else:
+        return
+
+    if user_id in ids:
+        temp_index = ids.index(user_id)
+        ids.remove(user_id)
+        ids.pop(temp_index)
+    ids = "".join(ids)
+    cur_sv.execute("UPDATE server SET playerID = (?) WHERE serverID = (?)", (ids, server_id))
+    con_sv.commit()
+
 
 def destroy_server(server_id: int) -> None:
     """destroy server by server id"""
