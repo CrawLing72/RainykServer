@@ -67,4 +67,4 @@ def gameover():
     return jsonify(answert="completed!"), 200
 
 if __name__ == '__main__':
-    app.run(host="3.36.28.245", port=5000)
+    app.run(host="0.0.0.0", port=80)
