@@ -25,7 +25,7 @@ def register():
     hashed_password = generate_password_hash(password)
 
     db.insert_user(username, hashed_password) # ALERT : UID System 구현해 놓을 것
-    return jsonify({"message": "User registered successfully"}), 201
+    return jsonify({"message": "User registered successfully"}), 200
 
 
 # 로그인 엔드포인트
@@ -40,7 +40,7 @@ def login():
 
     # 사용자가 없거나 비밀번호가 틀린 경우
     if user_password == None or not check_password_hash(user_password, password):
-        return jsonify({"message": "Invalid username or password"}), 401
+        return jsonify({"message": "Invalid username or password"}), 402
 
     # 액세스 토큰 생성
     access_token = create_access_token(identity=username)
@@ -67,4 +67,4 @@ def gameover():
     return jsonify(answert="completed!"), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="3.36.28.245", port=5000)
