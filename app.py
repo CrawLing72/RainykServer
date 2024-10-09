@@ -19,7 +19,7 @@ def register():
     password = data.get('password')
 
     if db.search_user_name(username) is not None:
-        return jsonify({"message": "User already exists"}), 400
+        return jsonify({"message": "User already exists"}), 405
 
     # 비밀번호 해시화
     hashed_password = generate_password_hash(password)
@@ -56,6 +56,8 @@ def patchmaking():
 
     return jsonify(arranged_server = data[0], player_count = data[1]), 200
 
+
+# Gameover Endpoint
 @app.route('/gameover', methods=['GET'])
 @jwt_required()
 def gameover():
@@ -65,6 +67,17 @@ def gameover():
 
     db.destroy_server(target_server_id)
     return jsonify(answert="completed!"), 200
+
+
+# exit room endpoint
+@app.route('/exit', methods=['GET'])
+@jwt_required()
+def exit():
+    current_user = get_jwt_identity()
+    data = request.get_json()
+    # 이 이후로 어떻게든 잘 구현해 놓을것~
+
+
 
 if __name__ == '__main__':
     app.run( port=5000, debug= True, host = '0.0.0.0')

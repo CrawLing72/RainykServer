@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="RainykServer" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="RainykServer" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (RainykServer)" project-jdk-type="Python SDK" />
 </project>
